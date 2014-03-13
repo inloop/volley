@@ -521,6 +521,10 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         return mResponseDelivered;
     }
 
+    public CustomCache<T> getCustomCache() {
+        return null;
+    }
+
     /**
      * Subclasses must implement this to parse the raw network response
      * and return an appropriate response type. This method will be

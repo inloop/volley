@@ -27,6 +27,8 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 
+import java.util.Map;
+
 /**
  * A canned request for getting an image at a given URL and calling
  * back with a decoded Bitmap.

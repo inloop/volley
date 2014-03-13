@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * A request for retrieving a {@link JSONArray} response body at a given URL.

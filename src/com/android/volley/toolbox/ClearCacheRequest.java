@@ -24,6 +24,8 @@ import com.android.volley.Response;
 import android.os.Handler;
 import android.os.Looper;
 
+import java.util.Map;
+
 /**
  * A synthetic request used for clearing the cache.
  */

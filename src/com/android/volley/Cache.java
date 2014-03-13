@@ -22,20 +22,20 @@ import java.util.Map;
 /**
  * An interface for a cache keyed by a String with a byte array as data.
  */
-public interface Cache {
+public interface Cache<T> {
     /**
      * Retrieves an entry from the cache.
      * @param key Cache key
      * @return An {@link Entry} or null in the event of a cache miss
      */
-    public Entry get(String key);
+    public Entry<T> get(String key);
 
     /**
      * Adds or replaces an entry to the cache.
      * @param key Cache key
      * @param entry Data to store and metadata for cache coherency, TTL, etc.
      */
-    public void put(String key, Entry entry);
+    public void put(String key, Entry<T> entry);
 
     /**
      * Performs any potentially long-running actions needed to initialize the cache;
@@ -64,9 +64,11 @@ public interface Cache {
     /**
      * Data and metadata for an entry returned by the cache.
      */
-    public static class Entry {
+    public static class Entry<T> {
         /** The data returned from cache. */
         public byte[] data;
+
+        public T parsedData;
 
         /** ETag for cache coherency. */
         public String etag;

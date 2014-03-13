@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * A request for retrieving a {@link JSONObject} response body at a given URL, allowing for an

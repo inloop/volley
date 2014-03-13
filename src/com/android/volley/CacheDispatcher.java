@@ -97,7 +97,12 @@ public class CacheDispatcher extends Thread {
                 }
 
                 // Attempt to retrieve this item from cache.
-                Cache.Entry entry = mCache.get(request.getCacheKey());
+                Cache.Entry entry = null;
+                if (request.getCustomCache() != null) {
+                    entry = request.getCustomCache().getCache().get(request.getCacheKey());
+                } else {
+                    entry = mCache.get(request.getCacheKey());
+                }
                 if (entry == null) {
                     request.addMarker("cache-miss");
                     // Cache miss; send off to the network dispatcher.
@@ -115,8 +120,13 @@ public class CacheDispatcher extends Thread {
 
                 // We have a cache hit; parse its data for delivery back to the request.
                 request.addMarker("cache-hit");
-                Response<?> response = request.parseNetworkResponse(
-                        new NetworkResponse(entry.data, entry.responseHeaders));
+                final Response<?> response;
+                if (request.getCustomCache() == null) {
+                    response = request.parseNetworkResponse(
+                            new NetworkResponse(entry.data, entry.responseHeaders));
+                } else {
+                    response = request.getCustomCache().parseCustomCacheResponse(entry.parsedData, entry.responseHeaders);
+                }
                 request.addMarker("cache-hit-parsed");
 
                 if (!entry.refreshNeeded()) {

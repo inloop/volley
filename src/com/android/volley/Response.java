@@ -40,9 +40,9 @@ public class Response<T> {
 
     /** Returns a successful response containing the parsed result. */
     public static <T> Response<T> success(T result, Cache.Entry cacheEntry) {
+        cacheEntry.parsedData = result;
         return new Response<T>(result, cacheEntry);
     }
-
     /**
      * Returns a failed response containing the given error code and an optional
      * localized message displayed to the user.
@@ -70,10 +70,10 @@ public class Response<T> {
         return error == null;
     }
 
-
     private Response(T result, Cache.Entry cacheEntry) {
         this.result = result;
         this.cacheEntry = cacheEntry;
+        this.cacheEntry.parsedData = result;
         this.error = null;
     }
 
