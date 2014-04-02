@@ -533,7 +533,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      * @param response Response from the network
      * @return The parsed response, or null in the case of an error
      */
-    abstract protected Response<T> parseNetworkResponse(NetworkResponse response);
+    abstract public Response<T> parseNetworkResponse(NetworkResponse response);
 
     /**
      * Subclasses can override this method to parse 'networkError' and return a more specific error.
@@ -543,7 +543,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      * @param volleyError the error retrieved from the network
      * @return an NetworkError augmented with additional information
      */
-    protected VolleyError parseNetworkError(VolleyError volleyError) {
+    public VolleyError parseNetworkError(VolleyError volleyError) {
         return volleyError;
     }
 

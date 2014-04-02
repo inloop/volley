@@ -55,7 +55,7 @@ public class BasicNetwork implements Network {
 
     private static int SLOW_REQUEST_THRESHOLD_MS = 3000;
 
-    private static int DEFAULT_POOL_SIZE = 4096;
+    public static int DEFAULT_POOL_SIZE = 4096;
 
     protected final HttpStack mHttpStack;
 
@@ -104,7 +104,7 @@ public class BasicNetwork implements Network {
 
                 // Some responses such as 204s do not have content.  We must check.
                 if (httpResponse.getEntity() != null) {
-                  responseContents = entityToBytes(httpResponse.getEntity());
+                  responseContents = entityToBytes(mPool, httpResponse.getEntity());
                 } else {
                   // Add 0 byte response as a way of honestly representing a
                   // no-content request.
@@ -116,7 +116,7 @@ public class BasicNetwork implements Network {
                 logSlowRequests(requestLifetime, request, responseContents, statusLine);
 
                 if (statusCode < 200 || statusCode > 299) {
-                    throw new IOException();
+                    //throw new IOException();
                 }
                 return new NetworkResponse(statusCode, responseContents, responseHeaders, false);
             } catch (SocketTimeoutException e) {
@@ -207,16 +207,16 @@ public class BasicNetwork implements Network {
     }
 
     /** Reads the contents of HttpEntity into a byte[]. */
-    private byte[] entityToBytes(HttpEntity entity) throws IOException, ServerError {
+    public static byte[] entityToBytes(ByteArrayPool pool, HttpEntity entity) throws IOException, ServerError {
         PoolingByteArrayOutputStream bytes =
-                new PoolingByteArrayOutputStream(mPool, (int) entity.getContentLength());
+                new PoolingByteArrayOutputStream(pool, (int) entity.getContentLength());
         byte[] buffer = null;
         try {
             InputStream in = entity.getContent();
             if (in == null) {
                 throw new ServerError();
             }
-            buffer = mPool.getBuf(1024);
+            buffer = pool.getBuf(1024);
             int count;
             while ((count = in.read(buffer)) != -1) {
                 bytes.write(buffer, 0, count);
@@ -231,7 +231,7 @@ public class BasicNetwork implements Network {
                 // an invalid state.
                 VolleyLog.v("Error occured when calling consumingContent");
             }
-            mPool.returnBuf(buffer);
+            pool.returnBuf(buffer);
             bytes.close();
         }
     }
@@ -239,7 +239,7 @@ public class BasicNetwork implements Network {
     /**
      * Converts Headers[] to Map<String, String>.
      */
-    private static Map<String, String> convertHeaders(Header[] headers) {
+    public static Map<String, String> convertHeaders(Header[] headers) {
         Map<String, String> result = new HashMap<String, String>();
         for (int i = 0; i < headers.length; i++) {
             result.put(headers[i].getName(), headers[i].getValue());
