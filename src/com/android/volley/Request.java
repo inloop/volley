@@ -277,7 +277,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      * Returns the URL of this request.
      */
     public String getUrl() {
-        return mUrl;
+        return prepareGetUrl(mUrl, getUrlParams());
     }
 
     /**
@@ -435,6 +435,32 @@ public abstract class Request<T> implements Comparable<Request<T>> {
             return encodeParameters(params, getParamsEncoding());
         }
         return null;
+    }
+
+    protected Map<String, String> getUrlParams() {
+        return null;
+    }
+
+    /**
+     * Helper method that appends parameters to the specified URL
+     * @param url base url
+     * @param queryParameters parameters
+     * @return url with appended parameters
+     */
+    protected static String prepareGetUrl(String url, Map<String, String> queryParameters) {
+        final String finalUrl;
+        if (queryParameters == null) {
+            finalUrl = url;
+        } else {
+            Uri.Builder uri = Uri.parse(url).buildUpon();
+            for (Map.Entry<String, String> valueSet : queryParameters.entrySet()) {
+                if (valueSet.getValue() != null) {
+                    uri.appendQueryParameter(valueSet.getKey(), valueSet.getValue());
+                }
+            }
+            finalUrl = uri.toString();
+        }
+        return finalUrl;
     }
 
     /**
