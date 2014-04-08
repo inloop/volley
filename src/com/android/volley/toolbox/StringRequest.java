@@ -62,7 +62,7 @@ public class StringRequest extends Request<String> {
     }
 
     @Override
-    protected Response<String> parseNetworkResponse(NetworkResponse response) {
+    public Response<String> parseNetworkResponse(NetworkResponse response) {
         String parsed;
         try {
             parsed = new String(response.data, HttpHeaderParser.parseCharset(response.headers));

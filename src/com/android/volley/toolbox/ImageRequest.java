@@ -121,7 +121,7 @@ public class ImageRequest extends Request<Bitmap> {
     }
 
     @Override
-    protected Response<Bitmap> parseNetworkResponse(NetworkResponse response) {
+    public Response<Bitmap> parseNetworkResponse(NetworkResponse response) {
         // Serialize all decode on a global lock to reduce concurrent heap usage.
         synchronized (sDecodeLock) {
             try {
