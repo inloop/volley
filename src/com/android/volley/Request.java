@@ -69,6 +69,9 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     /** URL of this request. */
     private final String mUrl;
 
+	/** URL with appended parameters from {@link #getUrlParams()} */
+	private String mParametrizedUrl;
+
     /** Default tag for {@link TrafficStats}. */
     private final int mDefaultTrafficStatsTag;
 
@@ -277,7 +280,10 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      * Returns the URL of this request.
      */
     public String getUrl() {
-        return prepareGetUrl(mUrl, getUrlParams());
+	    if (mParametrizedUrl == null) {
+		    mParametrizedUrl = prepareGetUrl(mUrl, getUrlParams());
+	    }
+        return mParametrizedUrl;
     }
 
     /**
